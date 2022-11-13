@@ -133,4 +133,9 @@ AUTH_USER_MODEL = "users.User"
 LOGIN_URL = reverse_lazy("users:login")
 LOGIN_REDIRECT_URL = reverse_lazy("shortener:list")
 
+# Domain for short urls
 DOMAIN = config("DOMAIN")
+
+# Pagination settings
+PAGINATE_BY = 5
+PAGINATE_PER_PAGE_MAX = 50

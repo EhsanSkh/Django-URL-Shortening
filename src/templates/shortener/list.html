@@ -15,10 +15,20 @@
             <p>You are logged in as <strong>{{ user.email }}</strong> <a href="{% url "users:logout" %}">   Logout</a></p>
         </div>
 
+        <div class="col-md-12 col-sm-12" style="margin-bottom: 2rem;">
+            <a class="btn btn-primary pull-right" href="{% url "shortener:create" %}" role="button">Generate Short URL</a>
+        </div>
+
+        <div class="col-md-12 col-sm-12">
+            <p>
+                Select number of table rows in one page (currently is {{ paginator.per_page }}):
+                <a class="btn btn-sm btn-outline-dark" href="{% url "shortener:list" %}?perPage=10">10</a>
+                <a class="btn btn-sm btn-outline-dark" href="{% url "shortener:list" %}?perPage=20" style="margin: 0 0.5rem;" >20</a>
+                <a class="btn btn-sm btn-outline-dark" href="{% url "shortener:list" %}?perPage=50">50</a>
+            </p>
+        </div>
+
         <div>
-            <div class="col-md-12 col-sm-12" style="margin-bottom: 2rem;">
-                <a class="btn btn-primary pull-right" href="{% url "shortener:create" %}" role="button">Create</a>
-            </div>
             <div class="table-responsive col-md-12 col-sm-12" id="table-container">
                 <table class="table table-hover col-md-12 col-sm-12">
                     <thead>
