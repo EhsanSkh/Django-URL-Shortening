@@ -2,14 +2,15 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views import View, generic
 from users import forms
 
 
-class RegisterView(generic.CreateView):
+class RegisterView(generic.FormView):
     template_name = "users/register.html"
     form_class = forms.UserRegistrationForm
-    success_url = "/"
+    success_url = reverse_lazy("shortener:list")
 
     def form_valid(self, form):
         form.save()
@@ -20,7 +21,6 @@ class RegisterView(generic.CreateView):
             login(self.request, user)
             messages.success(self.request, "Account created successfully. You are logged in.")
         else:
-            messages.success(self.request, "Account created successfully. Now please login.")
             return super(RegisterView, self).form_invalid(form)
 
         return super(RegisterView, self).form_valid(form)
@@ -29,7 +29,7 @@ class RegisterView(generic.CreateView):
 class LoginView(generic.FormView):
     template_name = "users/login.html"
     form_class = forms.UserLoginForm
-    success_url = "/"
+    success_url = reverse_lazy("shortener:list")
 
     def form_valid(self, form):
         email = form.cleaned_data.get("email")
@@ -40,7 +40,7 @@ class LoginView(generic.FormView):
             return super(LoginView, self).form_invalid(form)
         else:
             login(self.request, user)
-            messages.success(self.request, "You are logged in successfully.")
+            messages.success(self.request, "You are logged in.")
 
         return super(LoginView, self).form_valid(form)
 
@@ -48,6 +48,6 @@ class LoginView(generic.FormView):
 class LogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
-        messages.success(self.request, "You are logged out successfully.")
+        messages.success(self.request, "You are logged out.")
         return redirect("users:login")
 

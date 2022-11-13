@@ -11,6 +11,10 @@
 
         {% include "includes/alerts.html" %}
 
+        <div class="col-md-12 col-sm-12" style="margin-bottom: 2rem;">
+            <p>You are logged in as <strong>{{ user.email }}</strong> <a href="{% url "users:logout" %}">   Logout</a></p>
+        </div>
+
         <div>
             <div class="col-md-12 col-sm-12" style="margin-bottom: 2rem;">
                 <a class="btn btn-primary pull-right" href="{% url "shortener:create" %}" role="button">Create</a>
