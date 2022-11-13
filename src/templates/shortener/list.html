@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="col-md-12 col-sm-12" style="margin-bottom: 2rem;">
+            <div class="page-header">
+                <h3>URLs List</h3>
+            </div>
+        </div>
+
+        {% include "includes/alerts.html" %}
+
+        <div>
+            <div class="col-md-12 col-sm-12" style="margin-bottom: 2rem;">
+                <a class="btn btn-primary pull-right" href="{% url "shortener:create" %}" role="button">Create</a>
+            </div>
+            <div class="table-responsive col-md-12 col-sm-12" id="table-container">
+                <table class="table table-hover col-md-12 col-sm-12">
+                    <thead>
+                    <tr>
+                        <th>PK</th>
+                        <th>URL</th>
+                        <th>SHORT URL</th>
+                        <th>USER</th>
+                        <th>CREATED_AT</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for url in urls %}
+                        <tr>
+                            <td>
+                                {{ url.id }}
+                            </td>
+                            <td>
+                                <a href="{{ url.main_url }}">{{ url.main_url }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ url.main_url }}">{{ url.short_url }}</a>
+                            </td>
+                            <td>
+                                {{ url.user.email }}
+                            </td>
+                            <td>
+                                {{ url.created }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
