@@ -11,6 +11,7 @@ class URLShortenerListView(LoginRequiredMixin, generic.ListView):
     template_name = "shortener/list.html"
     model = URL
     context_object_name = "urls"
+    paginate_by = 20
 
 
 class URLShortenerCreateView(StaffMixin, generic.CreateView):
