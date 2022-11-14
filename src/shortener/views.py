@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
@@ -11,10 +12,18 @@ from shortener.models import URL
 
 class URLShortenerListView(LoginRequiredMixin, generic.ListView):
     template_name = "shortener/list.html"
-    model = URL
     context_object_name = "urls"
     paginate_by = settings.PAGINATE_BY
     per_page_max = settings.PAGINATE_PER_PAGE_MAX
+
+    def get_queryset(self):
+        search_keyword = self.request.GET.get("searchKeyword")
+        if search_keyword:
+            return URL.objects.filter(
+                Q(main_url__icontains=search_keyword) | Q(user__email__icontains=search_keyword)
+            )
+        else:
+            return URL.objects.all()
 
     def get_paginate_by(self, queryset):
         try:
@@ -35,6 +44,10 @@ class URLShortenerListView(LoginRequiredMixin, generic.ListView):
                 context["per_page"] = str(per_page)
         except:
             context["per_page"] = None
+
+        context["search_keyword"] = self.request.GET.get("searchKeyword")
+        context["url_count"] = self.get_queryset().count()
+
         return context
 
 

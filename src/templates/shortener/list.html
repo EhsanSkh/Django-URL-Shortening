@@ -12,19 +12,40 @@
         {% include "includes/alerts.html" %}
 
         <div class="col-md-12 col-sm-12" style="margin-bottom: 2rem;">
-            <p>You are logged in as <strong>{{ user.email }}</strong> <a href="{% url "users:logout" %}">   Logout</a></p>
+            <p>You are logged in as <strong>{{ user.email }}</strong> <a href="{% url "users:logout" %}"> Logout</a></p>
         </div>
 
         <div class="col-md-12 col-sm-12" style="margin-bottom: 2rem;">
-            <a class="btn btn-primary pull-right" href="{% url "shortener:create" %}" role="button">Generate Short URL</a>
+            <a class="btn btn-primary pull-right" href="{% url "shortener:create" %}" role="button">Generate Short
+                URL</a>
         </div>
 
+        <hr>
+
+        <form class="form-inline" action="{% url "shortener:list" %}" method="get">
+            <div class="input-group mb-3" style="width: 30rem;">
+                <input type="text" class="form-control" name="searchKeyword"
+                       placeholder="{% if search_keyword %}{{ search_keyword }}{% else %}Search Keyword{% endif %}">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+
+        <hr>
+
+        {% if url_count %}
+            <strong>{{ url_count }} URLs found</strong>
+        {% endif %}
         <div class="col-md-12 col-sm-12">
             <p>
                 Select number of table rows in one page (currently is {{ paginator.per_page }}):
-                <a class="btn btn-sm btn-outline-dark" href="{% url "shortener:list" %}?perPage=10">10</a>
-                <a class="btn btn-sm btn-outline-dark" href="{% url "shortener:list" %}?perPage=20" style="margin: 0 0.5rem;" >20</a>
-                <a class="btn btn-sm btn-outline-dark" href="{% url "shortener:list" %}?perPage=50">50</a>
+                <a class="btn btn-sm btn-outline-dark"
+                   href="{% include "includes/set_url.html" with page=1 per_page=10 %}">10</a>
+                <a class="btn btn-sm btn-outline-dark"
+                   href="{% include "includes/set_url.html" with page=1 per_page=20 %}" style="margin: 0 0.5rem;">20</a>
+                <a class="btn btn-sm btn-outline-dark"
+                   href="{% include "includes/set_url.html" with page=1 per_page=50 %}">50</a>
             </p>
         </div>
 
