@@ -11,7 +11,7 @@ User = get_user_model()
 
 class URL(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="urls")
-    main_url = models.URLField()
+    main_url = models.URLField(max_length=500)
     slug = models.SlugField()
     short_url = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
