@@ -141,3 +141,8 @@ DOMAIN = config("DOMAIN")
 # Pagination settings
 PAGINATE_BY = 5
 PAGINATE_PER_PAGE_MAX = 50
+
+# API pagination settings
+API_PAGINATE_BY = 10
+API_PAGINATE_PER_PAGE_MAX = 100
+

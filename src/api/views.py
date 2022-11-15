@@ -21,9 +21,9 @@ class RegistrationAPIView(generics.CreateAPIView):
 
 
 class URLsPagination(PageNumberPagination):
-    page_size = settings.PAGINATE_BY
-    max_page_size = settings.PAGINATE_PER_PAGE_MAX
-    page_size_query_param = 'perPage'
+    page_size = settings.API_PAGINATE_BY
+    max_page_size = settings.API_PAGINATE_PER_PAGE_MAX
+    page_size_query_param = "perPage"
 
 
 class URLShortenerViewSet(viewsets.ModelViewSet):
