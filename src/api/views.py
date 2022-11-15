@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import generics, status, viewsets
+from rest_framework import filters, generics, status, viewsets
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from api.serializers import UserRegistrationSerializer, URLShortenerSerializer
@@ -21,6 +21,8 @@ class RegistrationAPIView(generics.CreateAPIView):
 class URLShortenerViewSet(viewsets.ModelViewSet):
     serializer_class = URLShortenerSerializer
     queryset = URL.objects.all()
+    filter_backends = [filters.SearchFilter]
+    search_fields = ["main_url", "user__email"]
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
