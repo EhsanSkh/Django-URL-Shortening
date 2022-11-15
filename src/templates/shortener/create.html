@@ -5,6 +5,13 @@
     <div class="card mx-auto" style="max-width: 800px; margin-top:100px;">
         <div class="card-body">
             {% include "includes/alerts.html" %}
+            {% if form.errors %}
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
             <div class="col-md-12 col-sm-12" style="margin-bottom: 2rem;">
                 <p>You are logged in as <strong>{{ user.email }}</strong> <a href="{% url "users:logout" %}"> Logout</a>
                 </p>

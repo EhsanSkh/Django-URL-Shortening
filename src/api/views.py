@@ -22,10 +22,16 @@ class URLShortenerViewSet(viewsets.ModelViewSet):
     serializer_class = URLShortenerSerializer
     queryset = URL.objects.all()
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
     def retrieve(self, request, *args, **kwargs):
         url_obj = get_object_or_404(URL, slug=kwargs.get("pk"))
         serializer = URLShortenerSerializer(url_obj)
-        return Response(serializer.data)
+        return Response({
+            "status": status.HTTP_200_OK,
+            "data": serializer.data
+        })
 
     def get_permissions(self):
         if self.request.method == "GET":
