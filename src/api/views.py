@@ -1,5 +1,7 @@
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, generics, status, viewsets
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from api.serializers import UserRegistrationSerializer, URLShortenerSerializer
@@ -18,9 +20,16 @@ class RegistrationAPIView(generics.CreateAPIView):
         })
 
 
+class URLsPagination(PageNumberPagination):
+    page_size = settings.PAGINATE_BY
+    max_page_size = settings.PAGINATE_PER_PAGE_MAX
+    page_size_query_param = 'perPage'
+
+
 class URLShortenerViewSet(viewsets.ModelViewSet):
     serializer_class = URLShortenerSerializer
     queryset = URL.objects.all()
+    pagination_class = URLsPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ["main_url", "user__email"]
 
