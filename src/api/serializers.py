@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from shortener.models import URL
 
 User = get_user_model()
 
@@ -26,3 +27,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError({"error": "Passwords do not match."})
 
         return User.objects.create_user(**validated_data)
+
+
+class URLShortenerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = URL
+        fields = ["pk", "main_url", "short_url", "user", "created"]
+        read_only_fields = ["pk", "short_url", "user", "created"]
