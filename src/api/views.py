@@ -15,9 +15,8 @@ class RegistrationAPIView(generics.CreateAPIView):
         response = super().create(request, *args, **kwargs)
         return Response({
             "message": "User created successfully.",
-            "status": status.HTTP_201_CREATED,
             "data": response.data
-        })
+        }, status=status.HTTP_201_CREATED)
 
 
 class URLsPagination(PageNumberPagination):
@@ -40,7 +39,6 @@ class URLShortenerViewSet(viewsets.ModelViewSet):
         url_obj = get_object_or_404(URL, slug=kwargs.get("pk"))
         serializer = URLShortenerSerializer(url_obj)
         return Response({
-            "status": status.HTTP_200_OK,
             "data": serializer.data
         })
 
