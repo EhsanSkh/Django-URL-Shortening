@@ -18,12 +18,13 @@ class URLShortenerListView(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         search_keyword = self.request.GET.get("searchKeyword")
+        queryset = URL.objects.all().select_related("user")
         if search_keyword:
-            return URL.objects.filter(
+            return queryset.filter(
                 Q(main_url__icontains=search_keyword) | Q(user__email__icontains=search_keyword)
             )
         else:
-            return URL.objects.all()
+            return queryset
 
     def get_paginate_by(self, queryset):
         try:

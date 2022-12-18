@@ -1,6 +1,6 @@
 from django.conf import settings
-from django.shortcuts import get_object_or_404
 from rest_framework import filters, generics, status, viewsets
+from rest_framework import exceptions
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
@@ -24,10 +24,34 @@ class URLsPagination(PageNumberPagination):
     max_page_size = settings.API_PAGINATE_PER_PAGE_MAX
     page_size_query_param = "perPage"
 
+    def get_paginated_response(self, data):
+        return Response({
+            "message": "Successful" if self.page.paginator.count > 0 else "There is no URLs.",
+            "count": self.page.paginator.count,
+            "next": self.get_next_link(),
+            "previous": self.get_previous_link(),
+            "data": data
+        })
+
+    def paginate_queryset(self, queryset, request, view=None):
+        paginator = self.django_paginator_class(queryset, self.get_page_size(request))
+        page_number = request.query_params.get(self.page_query_param, 1)
+        if page_number in self.last_page_strings:
+            page_number = paginator.num_pages
+        try:
+            paginator.page(page_number)
+        except Exception as exc:
+            msg = {
+                "message": "There is no URLs.",
+                "data": []
+            }
+            raise exceptions.NotFound(msg)
+        return super(URLsPagination, self).paginate_queryset(queryset, request, view=None)
+
 
 class URLShortenerViewSet(viewsets.ModelViewSet):
     serializer_class = URLShortenerSerializer
-    queryset = URL.objects.all()
+    queryset = URL.objects.all().select_related("user")
     pagination_class = URLsPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ["main_url", "user__email"]
@@ -35,11 +59,24 @@ class URLShortenerViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-    def retrieve(self, request, *args, **kwargs):
-        url_obj = get_object_or_404(URL, slug=kwargs.get("pk"))
-        serializer = URLShortenerSerializer(url_obj)
+    def create(self, request, *args, **kwargs):
+        response = super().create(request, *args, **kwargs)
         return Response({
-            "data": serializer.data
+            "message": "Short URL created.",
+            "data": response.data,
+        }, status=status.HTTP_201_CREATED)
+
+    def retrieve(self, request, *args, **kwargs):
+        url_obj = self.get_queryset().filter(slug=kwargs.get("pk")).first()
+        if not url_obj:
+            return Response({
+                "message": "There is no short URL for this URL.",
+                "data": "",
+            }, status=status.HTTP_404_NOT_FOUND)
+        serializer = self.get_serializer(url_obj)
+        return Response({
+            "message": "Successful",
+            "data": serializer.data,
         })
 
     def get_permissions(self):
