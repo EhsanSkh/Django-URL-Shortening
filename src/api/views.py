@@ -51,7 +51,7 @@ class URLsPagination(PageNumberPagination):
 
 class URLShortenerViewSet(viewsets.ModelViewSet):
     serializer_class = URLShortenerSerializer
-    queryset = URL.objects.all().select_related("user")
+    queryset = URL.objects.all().only("main_url", "short_url", "user__email", "created").select_related("user")
     pagination_class = URLsPagination
     filter_backends = [filters.SearchFilter]
     search_fields = ["main_url", "user__email"]

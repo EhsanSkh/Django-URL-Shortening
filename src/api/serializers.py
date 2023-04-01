@@ -40,5 +40,5 @@ class URLShortenerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = URL
-        fields = ["pk", "main_url", "short_url", "user", "created"]
-        read_only_fields = ["pk", "short_url", "user", "created"]
+        fields = ["main_url", "short_url", "user", "created"]
+        read_only_fields = ["short_url", "user", "created"]

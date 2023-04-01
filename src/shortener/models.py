@@ -17,6 +17,9 @@ class URL(models.Model):
     short_url = models.CharField(max_length=255)
     created = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ["-created", "-id"]
+
     def __str__(self):
         return self.short_url
 
